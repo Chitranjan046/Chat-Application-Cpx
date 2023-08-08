@@ -1,17 +1,32 @@
 const express = require('express');
-const port = 5000;
+const http = require('http');
+const socketIO = require('socket.io');
+const path = require('path');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 
-const http = require('http').createServer(app);
+const port = process.env.PORT || 3000;
 
-app.get('/', (req, res)=>{
-    res.sendFile(__dirname + '/index.html');
-})
+app.use(express.static(path.join(__dirname, 'public')));
 
-http.listen(port, (err)=>{
-    if(err) {
-        console.log(`${err}`)
-    }
-    console.log(`Server is running on port : ${port}`)
-})
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
+
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('message', (msg) => {
+        io.emit('message', msg);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
+    });
+});
+
+server.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
