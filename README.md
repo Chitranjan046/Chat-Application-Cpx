@@ -30,3 +30,14 @@ CPX ChatApp is a simple web-based chat application that allows users to exchange
 
 This project was inspired by the desire to learn real-time communication using WebSocket technology (Socket.IO) and create a simple chat application.
 
+## Folder structure
+CPX-ChatApp/
+├── public/
+│   ├── index.html
+│   ├── styles.css
+│   ├── script.js
+├── src/
+│   ├── index.js
+├── README.md
+├── LICENSE
+└── package.json
