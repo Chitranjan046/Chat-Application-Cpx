@@ -3,29 +3,38 @@ const socket = io();
 let name;
 var text = document.querySelector('#textarea');
 var message_area = document.querySelector('.message__area');
+var sendButton = document.querySelector('#sendButton');
 
 do {
     name = prompt("Enter your name first");
 } while (!name);
 
+function sendMessage() {
+    const msg = text.value;
+    if (msg.trim() !== '') {
+        let mesgObj = {
+            user: name,
+            message: msg
+        };
+
+        appendMessage(mesgObj, "outgoing");
+
+        text.value = '';
+
+        socket.emit('message', mesgObj);
+    }
+}
+
 text.addEventListener('keyup', (e) => {
-    if (e.key === "Enter") {
-        sendMessage(e.target.value);
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
     }
 });
 
-function sendMessage(msg) {
-    let mesgObj = {
-        user: name,
-        message: msg
-    };
-
-    appendMessage(mesgObj, "outgoing");
-
-    text.value = "";
-
-    socket.emit('message', mesgObj);
-}
+sendButton.addEventListener('click', () => {
+    sendMessage();
+});
 
 function appendMessage(msg, type) {
     let division = document.createElement("div");
